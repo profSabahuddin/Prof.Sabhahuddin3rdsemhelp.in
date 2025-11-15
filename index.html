@@ -793,7 +793,8 @@
 
             <div class="about-content">
                 <div class="about-header">
-                    <img src="https://drive.google.com/uc?export=view&id=1XpQzKV_SHvaJF7FpzZAxf1bVvRCSnUpG" alt="Sabahuddin" class="creator-photo">
+                    <img src="https://lh3.googleusercontent.com/d/1XpQzKV_SHvaJF7FpzZAxf1bVvRCSnUpG" alt="Sabahuddin" class="creator-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="about-icon" style="display:none;">👨‍🏫</div>
                     <h2 class="about-title">Meet Sabahuddin</h2>
                     <p class="about-subtitle">Empowering Students Through Simplified Learning</p>
                 </div>
@@ -803,7 +804,7 @@
                 </p>
 
                 <p class="about-text">
-                    My journey as an <strong>NCC Cadet, NSS Volunteer, and BBA student</strong> has strengthened my discipline, leadership, and commitment to service. I've earned several academic achievements, including a Certificate of Excellence for Distinction in PUC & BBA !st Year, and have won inter-college essay writing, quiz, and logo-making competitions. Serving as <strong>College Captain and Class Representative for four consecutive years</strong> has shaped my teamwork, communication, and responsibility.
+                    My journey as an <strong>NCC Cadet, NSS Volunteer, and BBA student</strong> has strengthened my discipline, leadership, and commitment to service. I've earned several academic achievements, including a Certificate of Excellence for Distinction in PUC, and have won inter-college essay writing, quiz, and logo-making competitions. Serving as <strong>College Captain and Class Representative for four consecutive years</strong> has shaped my teamwork, communication, and responsibility.
                 </p>
 
                 <p class="about-text">
@@ -824,7 +825,7 @@
             <p>© 2025 Prof Sabu Exam Help | BBA Study Resources</p>
             <p>Designed for BBA 3rd Semester Students</p>
             
-            <p class="made-by">Made with ❤️ by: Sabhahuddin</p>
+            <p class="made-by">Made with ❤️ by: Sabahuddin</p>
             
             <div class="creator-cta">
                 <div class="sparkles">
@@ -953,6 +954,7 @@
         let selectedSubject = null;
         let selectedSection = null;
         let filteredSubjects = [...subjects];
+        let viewHistory = ['home'];
 
         const homeView = document.getElementById('homeView');
         const subjectView = document.getElementById('subjectView');
@@ -972,10 +974,33 @@
 
         function setupEventListeners() {
             searchInput.addEventListener('input', handleSearch);
-            document.getElementById('backToHome').addEventListener('click', () => showView('home'));
-            document.getElementById('backToSubject').addEventListener('click', () => showView('subject'));
-            document.getElementById('backToHomeFromAbout').addEventListener('click', () => showView('home'));
+            
+            document.getElementById('backToHome').addEventListener('click', (e) => {
+                e.preventDefault();
+                goBack();
+            });
+            
+            document.getElementById('backToSubject').addEventListener('click', (e) => {
+                e.preventDefault();
+                goBack();
+            });
+            
+            document.getElementById('backToHomeFromAbout').addEventListener('click', (e) => {
+                e.preventDefault();
+                goBack();
+            });
+            
             window.addEventListener('scroll', updateScrollProgress);
+        }
+
+        function goBack() {
+            if (viewHistory.length > 1) {
+                viewHistory.pop(); // Remove current view
+                const previousView = viewHistory[viewHistory.length - 1];
+                showView(previousView, true); // true means skip adding to history
+            } else {
+                showView('home', true);
+            }
         }
 
         function showAboutPage() {
@@ -998,7 +1023,7 @@
             renderSubjects();
         }
 
-        function showView(view) {
+        function showView(view, skipHistory = false) {
             homeView.classList.add('hidden');
             subjectView.classList.add('hidden');
             moduleView.classList.add('hidden');
@@ -1017,6 +1042,11 @@
                 aboutView.classList.remove('hidden');
                 currentView = 'about';
             }
+            
+            if (!skipHistory) {
+                viewHistory.push(view);
+            }
+            
             window.scrollTo(0, 0);
         }
 
@@ -1171,13 +1201,7 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (currentView === 'module') {
-                    showView('subject');
-                } else if (currentView === 'subject') {
-                    showView('home');
-                } else if (currentView === 'about') {
-                    showView('home');
-                }
+                goBack();
             }
             
             if (e.key === '/' && currentView === 'home') {
@@ -1196,13 +1220,7 @@
             const deltaX = touchEndX - touchStartX;
 
             if (deltaX > 100) {
-                if (currentView === 'module') {
-                    showView('subject');
-                } else if (currentView === 'subject') {
-                    showView('home');
-                } else if (currentView === 'about') {
-                    showView('home');
-                }
+                goBack();
             }
         });
 
